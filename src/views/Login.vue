@@ -76,7 +76,9 @@ export default {
       if (!code) {
         localStorage.setItem('token', token);
         this.$store.commit('setToken', token);
-        this.$router.push({ path: '/' });
+        // 注意 $route 与 $router 的区别
+        const {redirect} = this.$route.query || '/';
+        this.$router.push(redirect);
       } else {
         const toast = this.$createToast({
           time: 2000,
@@ -87,9 +89,7 @@ export default {
       }
     },
     validateHandler(result) {
-      this.validity = result.validity;
-      this.valid = result.valid;
-      console.log('validity', result.validity, result.valid, result.dirty, result.firstInvalidFieldIndex);
+      console.log('validity', result);
     }
   }
 };
