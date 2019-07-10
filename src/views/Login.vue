@@ -23,10 +23,14 @@ export default {
               placeholder: '请输入用户名'
             },
             rules: {
-              required: true
+              required: true,
+              custom: v => {
+                return v.length > 3;
+              }
             },
             messages: {
-              required: '用户名不能为空'
+              required: '用户名不能为空',
+              custom: '用户名至少要3个字符以上'
             },
             trigger: 'blur'
           },
@@ -64,11 +68,18 @@ export default {
   methods: {
     async submitHandler(e) {
       e.preventDefault(); // 阻止表单的默认行为
+
+      /* get
       const res = await this.$http.get('/api/login', {
         params: {
-          username: this.model.username,
-          password: this.model.password
+          ...this.model
         }
+      });
+      */
+
+      // post
+      const res = await this.$http.post('/api/login', {
+        ...this.model
       });
 
       const { code, token, messages } = res.data;
@@ -77,7 +88,7 @@ export default {
         localStorage.setItem('token', token);
         this.$store.commit('setToken', token);
         // 注意 $route 与 $router 的区别
-        const {redirect} = this.$route.query || '/';
+        const redirect = this.$route.query.redirect || '/';
         this.$router.push(redirect);
       } else {
         const toast = this.$createToast({

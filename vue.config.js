@@ -13,8 +13,16 @@ module.exports = {
       theme: true
     }
   },
+
+  lintOnSave: false,
+
   configureWebpack: {
     devServer: {
+      open: true,
+      overlay: {
+        warnings: false,
+        errors: false
+      },
       before(app) {
         // 中间件
         app.use(function(req, res, next) {
@@ -27,7 +35,7 @@ module.exports = {
               res.sendStatus(401); // 错误状态提示用户需要登录
             }
           } else {
-            next()
+            next();
           }
         });
 
@@ -38,7 +46,7 @@ module.exports = {
           });
         });
 
-        app.get('/api/login', function(req, res) {
+        /* app.get('/api/login', function(req, res) {
           const { username, password } = req.query;
           if (username === 'aaaaaa' && password === '123456') {
             res.json({
@@ -51,6 +59,30 @@ module.exports = {
               message: '用户名或密码错误'
             });
           }
+        }); */
+
+        app.post('/api/login', function(req, res) {
+          let body = [];
+          // post 提交获取参数
+          req
+            .on('data', chunk => {
+              body.push(chunk);
+            })
+            .on('end', () => {
+              body = Buffer.concat(body).toString();
+              const { username, password } = JSON.parse(body);
+              if (username === 'aaaaaa' && password === '123456') {
+                res.json({
+                  code: 0,
+                  token: 'jilei'
+                });
+              } else {
+                res.json({
+                  code: 1,
+                  message: '用户名或密码错误'
+                });
+              }
+            });
         });
 
         app.get('/api/logout', function(req, res) {
