@@ -31,6 +31,11 @@ export default {
       ]
     };
   },
+  watch: {
+    $route(route) {
+      this.selectLabel = route.path;
+    }
+  },
   methods: {
     logout() {
       this.$http.get('/api/logout').then(res => {

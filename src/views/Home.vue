@@ -1,7 +1,13 @@
 <template>
   <div class="home">
-    Home
-    <cube-button @click="showDrawer">Show Drawer</cube-button>
+    <cube-slide ref="slide" :data="slider" :interval="5000">
+      <cube-slide-item v-for="item in slider" :key="item.id">
+        <router-link :to="`/detail/${item.id}`">
+          <img :src="item.img" class="slider" />
+        </router-link>
+      </cube-slide-item>
+    </cube-slide>
+    <!-- <cube-button @click="showDrawer">Show Drawer</cube-button>
     <cube-drawer
       ref="drawer"
       title="请选择"
@@ -10,7 +16,7 @@
       @change="changeHandler"
       @select="selectHandler"
       @cancel="cancelHandler"
-    ></cube-drawer>
+    ></cube-drawer>-->
   </div>
 </template>
 
@@ -21,13 +27,14 @@ export default {
     return {
       selectedIndex: [],
       goods: [], // 所有商品列表
-      drawerList: [] // 分类列表
+      drawerList: [], // 分类列表
+      slider: []
     };
   },
   async created() {
     const res = await this.$http.get('/api/goods');
-    this.goods = res.data.list;
-    console.log(this.goods);
+    this.slider = res.data.slider;
+    console.log(this.slider);
   },
   methods: {
     showDrawer() {
@@ -39,3 +46,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.cube-slide {
+  height: auto;
+}
+.cube-slide-item > a > img {
+  width: 100%;
+}
+</style>

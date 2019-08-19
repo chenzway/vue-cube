@@ -10,8 +10,8 @@ export default {
       validity: {},
       valid: undefined,
       model: {
-        username: '',
-        password: ''
+        username: 'aaaaaa',
+        password: '123456'
       },
       schema: {
         fields: [
