@@ -7,16 +7,16 @@
         </router-link>
       </cube-slide-item>
     </cube-slide>
-    <!-- <cube-button @click="showDrawer">Show Drawer</cube-button>
+    <cube-button @click="showDrawer">Show Drawer</cube-button>
     <cube-drawer
       ref="drawer"
       title="请选择"
-      :data="goods"
+      :data="data"
       :selected-index="selectedIndex"
       @change="changeHandler"
       @select="selectHandler"
       @cancel="cancelHandler"
-    ></cube-drawer>-->
+    ></cube-drawer>
   </div>
 </template>
 
@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       selectedIndex: [],
+      data: [[], [], []],
       goods: [], // 所有商品列表
       drawerList: [], // 分类列表
       slider: []
@@ -40,9 +41,33 @@ export default {
     showDrawer() {
       this.$refs.drawer.show();
     },
-    changeHandler() {},
-    selectHandler() {},
-    cancelHandler() {}
+    changeHandler(index, item, selectedVal, selectedIndex, selectedText) {
+      // fake request
+      setTimeout(() => {
+        let data;
+        if (index === 0) {
+          // procince change, get city data
+          data = cityList[item.value];
+        } else {
+          // city change, get area data
+          data = areaList[item.value];
+        }
+        // refill panel(index + 1) data
+        this.$refs.drawer.refill(index + 1, data);
+      }, 200);
+    },
+    selectHandler(selectedVal, selectedIndex, selectedText) {
+      this.$createDialog({
+        type: 'warn',
+        content: `Selected Item: <br/> - value: ${selectedVal.join(', ')} <br/> - index: ${selectedIndex.join(
+          ', '
+        )} <br/> - text: ${selectedText.join(' ')}`,
+        icon: 'cubeic-alert'
+      }).show();
+    },
+    cancelHandler() {
+      console.log('cancel');
+    }
   }
 };
 </script>

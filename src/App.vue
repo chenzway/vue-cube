@@ -3,7 +3,15 @@
     <transition name="route-move">
       <router-view class="child-view" />
     </transition>
-    <cube-toolbar :actions="actions" @click="clickHandler"></cube-toolbar>
+
+    <cube-tab-bar v-model="selectedLabelDefault" show-slider inline @click="clickHandler">
+      <cube-tab v-for="item in tabs" :label="item.label" :key="item.label" :value="item.action">
+        <!-- name为icon的插槽 -->
+        <i slot="icon" :class="item.icon"></i>
+        <!-- 默认插槽 -->
+        {{ item.label }}
+      </cube-tab>
+    </cube-tab-bar>
   </div>
 </template>
 <script>
@@ -12,19 +20,20 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      actions: [
+      selectedLabelDefault: '/',
+      tabs: [
         {
-          text: '  Home',
+          label: 'Home',
           icon: 'cubeic-home',
           action: '/'
         },
         {
-          text: '  Cart',
+          label: 'Cart',
           icon: 'cubeic-mall',
           action: '/about'
         },
         {
-          text: '  Me',
+          label: 'Me',
           icon: 'cubeic-person ',
           action: '/login'
         }
@@ -33,7 +42,7 @@ export default {
   },
   watch: {
     $route(route) {
-      this.selectLabel = route.path;
+      this.selectedLabelDefault = route.path;
     }
   },
   methods: {
@@ -43,9 +52,8 @@ export default {
         console.log(code);
       });
     },
-    clickHandler(item) {
-      this.$router.push({ path: `${item.action}` });
-      console.log(item.action);
+    clickHandler(action) {
+      this.$router.push({ path: `${action}` });
     }
   },
   computed: {
@@ -78,4 +86,9 @@ export default {
     right 0
     .cube-toolbar-item .cube-btn
       font-size 0.42rem
+  .cube-tab-bar
+    position fixed
+    bottom 0
+    width 100%
+    background #efefef
 </style>
