@@ -1,82 +1,17 @@
 <template>
   <div class="home">
-    <cube-slide ref="slide" :data="slider" :interval="5000">
-      <cube-slide-item v-for="item in slider" :key="item.id">
-        <router-link :to="`/detail/${item.id}`">
-          <img :src="item.img" class="slider" />
-        </router-link>
-      </cube-slide-item>
-    </cube-slide>
-    <cube-button @click="showDrawer">Show Drawer</cube-button>
-    <cube-drawer
-      ref="drawer"
-      title="请选择"
-      :data="data"
-      :selected-index="selectedIndex"
-      @change="changeHandler"
-      @select="selectHandler"
-      @cancel="cancelHandler"
-    ></cube-drawer>
+    <cube-button>Button</cube-button>
   </div>
 </template>
 
 <script>
+// @ is an alias to /src
+import HelloWorld from '@/components/HelloWorld.vue';
+
 export default {
   name: 'home',
-  data() {
-    return {
-      selectedIndex: [],
-      data: [[], [], []],
-      goods: [], // 所有商品列表
-      drawerList: [], // 分类列表
-      slider: []
-    };
-  },
-  async created() {
-    const res = await this.$http.get('/api/goods');
-    this.slider = res.data.slider;
-    console.log(this.slider);
-  },
-  methods: {
-    showDrawer() {
-      this.$refs.drawer.show();
-    },
-    changeHandler(index, item, selectedVal, selectedIndex, selectedText) {
-      // fake request
-      setTimeout(() => {
-        let data;
-        if (index === 0) {
-          // procince change, get city data
-          data = cityList[item.value];
-        } else {
-          // city change, get area data
-          data = areaList[item.value];
-        }
-        // refill panel(index + 1) data
-        this.$refs.drawer.refill(index + 1, data);
-      }, 200);
-    },
-    selectHandler(selectedVal, selectedIndex, selectedText) {
-      this.$createDialog({
-        type: 'warn',
-        content: `Selected Item: <br/> - value: ${selectedVal.join(', ')} <br/> - index: ${selectedIndex.join(
-          ', '
-        )} <br/> - text: ${selectedText.join(' ')}`,
-        icon: 'cubeic-alert'
-      }).show();
-    },
-    cancelHandler() {
-      console.log('cancel');
-    }
+  components: {
+    HelloWorld
   }
 };
 </script>
-
-<style scoped>
-.cube-slide {
-  height: auto;
-}
-.cube-slide-item > a > img {
-  width: 100%;
-}
-</style>

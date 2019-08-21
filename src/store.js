@@ -3,20 +3,19 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || ''
   },
   mutations: {
-    setToken(state, token) {
-      state.token = token;
+    setToken(state, val) {
+      state.token = val;
     }
   },
-  actions: {},
-  getters: {
-    isLogin: state => {
-      // 转为 bool 值
-      return !!state.token;
-    }
-  }
+  actions: {}
 });
+
+// 订阅
+store.subscribe((mutation, state) => {});
+
+export default store;

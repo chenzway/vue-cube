@@ -1,14 +1,14 @@
 <template>
-  <cube-form :model="model" :schema="schema" @validate="validateHandler" @submit="submitHandler"></cube-form>
+  <div class="login">
+    <cube-form :model="model" :schema="schema" :immediate-validate="false" @submit="submitHandler"></cube-form>
+  </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 export default {
   name: 'login',
   data() {
     return {
-      validity: {},
-      valid: undefined,
       model: {
         username: 'aaaaaa',
         password: '123456'
@@ -18,90 +18,59 @@ export default {
           {
             type: 'input',
             modelKey: 'username',
-            label: '用户名',
-            props: {
-              placeholder: '请输入用户名'
-            },
-            rules: {
-              required: true,
-              custom: v => {
-                return v.length > 3;
-              }
-            },
-            messages: {
-              required: '用户名不能为空',
-              custom: '用户名至少要3个字符以上'
-            },
-            trigger: 'blur'
-          },
-          {
-            type: 'input',
-            modelKey: 'password',
-            label: '密码',
-            props: {
-              placeholder: '请输入密码',
-              // 密码框
-              type: 'password',
-              eye: { open: false }
-            },
             rules: {
               required: true
             },
             messages: {
-              required: '密码不能为空'
-            },
-            trigger: 'blur'
+              required: '请输入用户名'
+            }
           },
-          // 登录按钮
+          {
+            type: 'input',
+            modelKey: 'password',
+            rules: {
+              required: true
+            },
+            messages: {
+              required: '请输入密码'
+            },
+            props: {
+              type: 'password',
+              eye: {
+                open: false,
+                reverse: false
+              }
+            }
+          },
           {
             type: 'submit',
-            label: '登录'
+            label: 'Submit'
           }
         ]
-      },
-      options: {
-        scrollToInvalidField: true,
-        layout: 'standard' // classic fresh
       }
     };
   },
   methods: {
     async submitHandler(e) {
-      e.preventDefault(); // 阻止表单的默认行为
-
-      /* get
-      const res = await this.$http.get('/api/login', {
-        params: {
-          ...this.model
-        }
-      });
-      */
-
-      // post
-      const res = await this.$http.post('/api/login', {
-        ...this.model
-      });
-
-      const { code, token, messages } = res.data;
-      // 判断登录是否成功并处理 token
+      e.preventDefault();
+      let res = await this.$http.post('/api/login', { ...this.model });
+      const { token, code, message } = res.data;
       if (!code) {
         localStorage.setItem('token', token);
         this.$store.commit('setToken', token);
-        // 注意 $route 与 $router 的区别
         const redirect = this.$route.query.redirect || '/';
         this.$router.push(redirect);
       } else {
         const toast = this.$createToast({
           time: 2000,
-          txt: messages || '登录失败!',
+          txt: message || '登录失败',
           type: 'error'
         });
         toast.show();
       }
-    },
-    validateHandler(result) {
-      console.log('validity', result);
     }
   }
 };
 </script>
+
+<style scoped lang="stylus"></style>

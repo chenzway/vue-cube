@@ -1,13 +1,7 @@
-/*
- * File Created: 2019-07-09 11:11:33, Tuesday
- * Author: chenzway
- * Email:  599031437@qq.com
- * -----
- */
-
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
+
 Vue.use(Router);
 
 const router = new Router({
@@ -17,33 +11,37 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: () => import('./views/Home'),
       meta: {
         auth: true
-      }
+      },
+      component: () => import('./views/Home.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('./views/Login')
+      component: () => import('./views/Login.vue')
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('./views/About.vue'),
-      // 自定义属性，标记是否要验证登录
       meta: {
         auth: true
-      }
+      }, // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     }
   ]
 });
 
+// 路由守卫
 router.beforeEach((to, from, next) => {
+  // 根据 meta.auth 中判断路由是不是要做权限守卫
   if (to.meta.auth) {
     if (store.state.token) {
       next();
     } else {
+      // 重定向
       next({
         path: '/login',
         query: { redirect: to.path }

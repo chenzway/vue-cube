@@ -1,21 +1,23 @@
-// 拦截axios所有http请求，预先放入token请求头
 import axios from 'axios';
-import store from './store';
 import router from './router';
+import store from './store';
 
-axios.interceptors.request.use(config => {
-  if (store.state.token) {
-    // 若存在令牌，则放入请求头
-    config.headers.token = store.state.token;
+// 请求拦截， 主要是添加通用的参数 token
+axios.interceptors.request.use(
+  config => {
+    if (store.state.token) {
+      config.headers.token = store.state.token;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
 
-// 响应拦截器，提前预处理响应
+// 响应拦截，主要是判断 token 来判断用户是否登录
 axios.interceptors.response.use(
   response => {
-    // 如果code是-1，说明用户已注销或者token已过期
-    // 此时需要重新登录，并且还要清楚本地缓存信息
     if (response.status == 200) {
       const data = response.data;
       if (data.code == -1) {
@@ -24,11 +26,13 @@ axios.interceptors.response.use(
     }
     return response;
   },
-  err => {
-    if (err.response.status === 401) {
+  error => {
+    // Do something with response error
+    if (error.response.status === 401) {
       // 未授权
       clearHandler();
     }
+    return Promise.reject(error);
   }
 );
 

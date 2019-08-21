@@ -1,14 +1,14 @@
 import Vue from 'vue';
-import './cube-ui';
-import './cube-ui';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import 'amfe-flexible';
+// 引入 cube-ui
+import './cube-ui';
 import axios from 'axios';
-import interceptor from './http-interceptor';
+import './interceptors';
 
 Vue.config.productionTip = false;
+
 Vue.prototype.$http = axios;
 
 new Vue({
