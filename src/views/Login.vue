@@ -56,7 +56,6 @@ export default {
       let res = await this.$http.post('/api/login', { ...this.model });
       const { token, code, message } = res.data;
       if (!code) {
-        localStorage.setItem('token', token);
         this.$store.commit('setToken', token);
         const redirect = this.$route.query.redirect || '/';
         this.$router.push(redirect);

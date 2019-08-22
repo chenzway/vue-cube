@@ -6,7 +6,7 @@
       </cube-slide-item>
     </cube-slide>
     <cube-button @click="showDrawer">Show Drawer</cube-button>
-    <p v-for="(v, i) in filterGoods" :key="i">{{ v }}</p>
+    <goods-list :goods="filterGoods"></goods-list>
     <cube-drawer
       ref="drawer"
       title="请选择"
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import GoodsList from '@/components/GoodsList';
 const mapType = {
   fe: '前端',
   python: 'Python',
@@ -33,6 +34,9 @@ export default {
       drawerList: [],
       goods: []
     };
+  },
+  components: {
+    GoodsList
   },
   methods: {
     changePage(current) {

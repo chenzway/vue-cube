@@ -6,6 +6,7 @@
         <i slot="icon" :class="item.icon"></i>
         <!-- 默认插槽 -->
         {{ item.label }}
+        <span class="badge" v-if="showBadge(item.label)">{{ cartTotal }}</span>
       </cube-tab>
     </cube-tab-bar>
     <router-view />
@@ -13,6 +14,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
@@ -26,7 +29,7 @@ export default {
         {
           label: 'Cart',
           icon: 'cubeic-mall',
-          url: '/about'
+          url: '/cart'
         },
         {
           label: 'User',
@@ -45,9 +48,15 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['cartTotal'])
+  },
   methods: {
     clickHandler(label) {
       this.$router.push({ path: `${label}` });
+    },
+    showBadge(label) {
+      return label == 'Cart' && this.cartTotal > 0;
     }
   }
 };
@@ -60,4 +69,11 @@ export default {
   width 100%
   height 2rem
   background #efefef
+  span.badge
+    display inline-block
+    background #de3529
+    color white
+    width 1rem
+    height 1rem
+    border-radius 50%
 </style>
