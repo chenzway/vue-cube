@@ -1,8 +1,16 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
+import History from './utils/history';
 
 Vue.use(Router);
+Vue.use(History);
+
+// 实例化之前，在原型上扩展Router，让 Header 组件中调用 
+Router.prototype.goBack = function() {
+  this.isBack = true;
+  this.back();
+};
 
 const router = new Router({
   mode: 'history',
@@ -49,6 +57,19 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     next();
+  }
+});
+
+// 记录历史记录在自己维护的堆栈中
+router.afterEach(to => {
+  if (router.isBack) {
+    History.pop();
+    router.isBack = false;
+    // 用于过渡动画效果
+    router.transitionName = 'route-back';
+  } else {
+    History.push(to.path);
+    router.transitionName = 'route-forward';
   }
 });
 

@@ -17,7 +17,7 @@ export default {
         fields: [
           {
             type: 'input',
-            modelKey: 'username',
+            modelKey: 'username', // 对应 model 中的key值
             rules: {
               required: true
             },
@@ -35,7 +35,7 @@ export default {
               required: '请输入密码'
             },
             props: {
-              type: 'password',
+              type: 'password', // 设置为密码框 
               eye: {
                 open: false,
                 reverse: false
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     async submitHandler(e) {
-      e.preventDefault();
+      e.preventDefault();  // 阻止表单的默认事件
       let res = await this.$http.post('/api/login', { ...this.model });
       const { token, code, message } = res.data;
       if (!code) {

@@ -30,6 +30,7 @@ export default {
     };
   },
   computed: {
+    // mapState 只能使用要目录下的 state，在 module 下的 state 只能用以下的方式使用，或者使用 getters;
     ...mapState({
       cart: state => state.cart,
       token: state => state.token
@@ -37,6 +38,7 @@ export default {
     ...mapGetters(['total'])
   },
   methods: {
+    // 根据商品在购物车中的数组下标进行增减操作
     countAdd(index) {
       this.$store.commit('countAdd', index);
     },

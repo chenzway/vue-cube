@@ -1,19 +1,18 @@
 <template>
   <div class="home">
+    <!-- 页头 为全局注册的组件 -->
+    <k-header title="开课吧商城"></k-header>
+    <!-- 轮播 -->
     <cube-slide ref="slide" :data="slider" @change="changePage">
       <cube-slide-item v-for="item in slider" :key="item.id" @click.native="clickHandler(item)">
         <img :src="item.img" />
       </cube-slide-item>
     </cube-slide>
+    <!-- 分类按钮 -->
     <cube-button @click="showDrawer">Show Drawer</cube-button>
     <goods-list :goods="filterGoods"></goods-list>
-    <cube-drawer
-      ref="drawer"
-      title="请选择"
-      :data="[drawerList]"
-      :selected-index="selectedKeys"
-      @select="selectHandler"
-    ></cube-drawer>
+    <!-- 商品列表 -->
+    <cube-drawer ref="drawer" title="请选择" :data="[drawerList]" :selected-index="selectedKeys" @select="selectHandler"></cube-drawer>
   </div>
 </template>
 
@@ -64,7 +63,7 @@ export default {
     }
   },
   computed: {
-    // 根据选择的值要组合要展示的数据
+    // 根据选择的值要组合展示的数据
     filterGoods() {
       let ret = [];
       this.selectedKeys.forEach(v => {
